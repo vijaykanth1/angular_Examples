@@ -14,6 +14,7 @@ var HomeComponent = (function () {
     function HomeComponent(_geonameService) {
         this._geonameService = _geonameService;
         this.copyCountries = [];
+        this.sortAsc = true;
     }
     HomeComponent.prototype.loadCountries = function () {
         var _this = this;
@@ -22,13 +23,32 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.sortType = function (sort) {
         if (sort === 'name') {
-            this.countries = this.copyCountries.sort(this.sortByCountryName);
+            this.sortAsc = !this.sortAsc;
+            var sortAsc = this.sortAsc;
+            sortAsc ? this.countries = this.copyCountries.sort(this.sortByCountryNameAsc) :
+                this.countries = this.copyCountries.sort(this.sortByCountryNameDesc);
             console.log(this.countries);
         }
         if (sort === 'pop') {
             this.countries = this.copyCountries.sort(this.sortByPopulation);
             console.log(this.countries);
         }
+    };
+    HomeComponent.prototype.sortByCountryNameAsc = function (c1, c2) {
+        if (c1.countryName > c2.countryName)
+            return 1;
+        else if (c1.countryName === c2.countryName)
+            return 0;
+        else
+            return -1;
+    };
+    HomeComponent.prototype.sortByCountryNameDesc = function (c1, c2) {
+        if (c1.countryName < c2.countryName)
+            return 1;
+        else if (c1.countryName === c2.countryName)
+            return 0;
+        else
+            return -1;
     };
     HomeComponent.prototype.filterBy = function (filter) {
         switch (filter) {
@@ -50,14 +70,8 @@ var HomeComponent = (function () {
                 break;
         }
     };
-    HomeComponent.prototype.sortByCountryName = function (c1, c2) {
-        if (c1.countryName > c2.countryName)
-            return 1;
-        else if (c1.countryName === c2.countryName)
-            return 0;
-        else
-            return -1;
-    };
+    // let copyCountries = Object.assign({}, this.countries)
+    // let copyCountries = this.countries.slice(0)
     HomeComponent.prototype.sortByPopulation = function (c1, c2) {
         return parseInt(c1.population) - parseInt(c2.population);
     };

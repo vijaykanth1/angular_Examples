@@ -13,6 +13,7 @@ export class HomeComponent {
   errorMessage: string;
   copyCountries: ICountry[] = [];
   sortBy: string;
+  sortAsc:boolean = true;
 
   constructor(private _geonameService: GeonameService) { }
 
@@ -27,7 +28,10 @@ export class HomeComponent {
 
   sortType(sort: string) {
     if(sort === 'name') {
-      this.countries = this.copyCountries.sort(this.sortByCountryName);
+      this.sortAsc = !this.sortAsc;
+      let sortAsc:boolean = this.sortAsc;
+      sortAsc?this.countries = this.copyCountries.sort(this.sortByCountryNameAsc):
+      this.countries = this.copyCountries.sort(this.sortByCountryNameDesc);
       console.log(this.countries);
     }
     if(sort === 'pop') {
@@ -35,6 +39,19 @@ export class HomeComponent {
       console.log(this.countries);
     }
   }
+  
+
+    sortByCountryNameAsc(c1: ICountry, c2: ICountry) {
+      if(c1.countryName > c2.countryName) return 1
+     else if(c1.countryName === c2.countryName) return 0
+       else return -1
+    }
+    sortByCountryNameDesc(c1: ICountry, c2: ICountry) {
+      if(c1.countryName < c2.countryName) return 1
+     else if(c1.countryName === c2.countryName) return 0
+       else return -1
+    }
+    
 
   filterBy(filter: string) {
     switch(filter) {
@@ -57,19 +74,13 @@ export class HomeComponent {
     }
   }
 
-     sortByCountryName(c1: ICountry, c2: ICountry) {
-      if(c1.countryName > c2.countryName) return 1
-        else if(c1.countryName === c2.countryName) return 0
-          else return -1
-    }
-
-     sortByPopulation(c1: ICountry, c2: ICountry) {
-       return parseInt(c1.population) - parseInt(c2.population);
-    }
+     
 
     // let copyCountries = Object.assign({}, this.countries)
     // let copyCountries = this.countries.slice(0)
-
+     sortByPopulation(c1: ICountry, c2: ICountry) {
+       return parseInt(c1.population) - parseInt(c2.population);
+    }
     // if(filter === 'all') {
     //   console.log('all clicked');
     //  // this.countries = this.countries.slice(0);    // creates a duplicate
